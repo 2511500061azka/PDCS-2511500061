@@ -6,7 +6,7 @@ mysqli_report(MYSQLI_REPORT_OFF);
 $host = "localhost";
 $user = "root";
 $pass = "";
-$db = "akademik";
+$db = "akademik2";
 
 $koneksi = @mysqli_connect($host, $user, $pass, $db);
 
