@@ -55,7 +55,10 @@ switch ($method) {
 
     $search = $_GET['search'];
 
-    $q = "SELECT
+    $term = "%" . $search . "%";
+
+    $stmt = mysqli_prepare($koneksi, 
+        "SELECT
                 m.id,
                 m.nama,
                 m.nim,
@@ -63,11 +66,14 @@ switch ($method) {
             FROM mahasiswa m
             LEFT JOIN jurusan j
             ON m.jurusan_id = j.id
-            WHERE m.nama LIKE '%$search%'
-            OR m.nim LIKE '%$search%'
-            ORDER BY m.id DESC";
+            WHERE m.nama LIKE ?
+            OR m.nim LIKE ?
+            ORDER BY m.id DESC");
 
-            $r = mysqli_query($koneksi, $q);
+            mysqli_stmt_bind_param($stmt, "ss", $term, $term);
+            mysqli_stmt_execute($stmt);
+
+            $r = mysqli_stmt_get_result($stmt);
 
             if (!$r) {
             sendResponse(
