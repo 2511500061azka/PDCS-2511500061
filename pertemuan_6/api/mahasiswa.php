@@ -32,9 +32,11 @@ switch ($method) {
         $r = mysqli_stmt_get_result($stmt);
 
         if (!$r) {
+            error_log(mysqli_error($koneksi));
+
             sendResponse(
                 false,
-                "query gagal: " . mysqli_error($koneksi),
+                "terjadi kesalahan pada server",
                 null,
                 500
             );
@@ -53,7 +55,7 @@ switch ($method) {
     //search
     if (isset($_GET['search'])) {
 
-    $search = $_GET['search'];
+    $search = $_GET['search'] ?? "";
 
     $term = "%" . $search . "%";
 
@@ -76,9 +78,11 @@ switch ($method) {
             $r = mysqli_stmt_get_result($stmt);
 
             if (!$r) {
+            error_log(mysqli_error($koneksi));
+
             sendResponse(
                 false,
-                "query gagal: " . mysqli_error($koneksi),
+                "terjadi kesalahan pada server",
                 null,
                 500
             );
@@ -132,12 +136,14 @@ switch ($method) {
             $r = mysqli_query($koneksi, $q);
 
             if (!$r) {
-                sendResponse(
-                    false,
-                    "query gagal: " . mysqli_error($koneksi),
-                    null,
-                    500
-                );
+            error_log(mysqli_error($koneksi));
+
+            sendResponse(
+                false,
+                "terjadi kesalahan pada server",
+                null,
+                500
+            );
             }
 
             $data = [];
@@ -161,7 +167,16 @@ switch ($method) {
 
                 $r = mysqli_query($koneksi, $q);
 
-                if (!$r) sendResponse(false, "query gagal: " . mysqli_error($koneksi), null, 500);
+            if (!$r) {
+                error_log(mysqli_error($koneksi));
+
+                sendResponse(
+                    false,
+                    "terjadi kesalahan pada server",
+                    null,
+                    500
+            );
+        }
 
                 $data = [];
                 while ($row = mysqli_fetch_assoc($r)) {
@@ -207,7 +222,8 @@ switch ($method) {
                 if (mysqli_stmt_execute($stmt)) {
                     sendResponse(true, "data tersimpan", ["id" => mysqli_insert_id($koneksi)], 201);
                 } else {
-                    sendResponse(false, mysqli_error($koneksi, null, 500));
+                    error_log(mysqli_error($koneksi));
+                    sendResponse(false, "terjadi kesalahan pada server", null, 500);
                 }
 
             break;
@@ -252,7 +268,8 @@ switch ($method) {
                 if (mysqli_query($koneksi, $q)) {
                     sendResponse(true, "data berhasil diperbaharui", ["id" => $id], 200);
                 } else {
-                    sendResponse(false, mysqli_error($koneksi, null, 500));
+                    error_log(mysqli_error($koneksi));
+                    sendResponse(false, "terjadi kesalahan pada server", null, 500);
                 }
 
             break;
@@ -276,7 +293,8 @@ switch ($method) {
                 if (mysqli_query($koneksi, $q)) {
                     sendResponse(true, "data berhasil dihapus", ["id" => $id], 200);
                 } else {
-                    sendResponse(false, mysqli_error($koneksi, null, 500));
+                    error_log(mysqli_error($koneksi));
+                    sendResponse(false, "terjadi kesalahan pada server", null, 500);
                 }
                 break;
 
