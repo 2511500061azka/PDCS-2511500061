@@ -1,0 +1,1 @@
+  Penjelasan code http 404: Karena jurusan_id 6 tidak tersedia sehingga muncul http code 404 not found, dan jurusan_id table mahasiswa merupakan foreign key dari table jurusan id.
